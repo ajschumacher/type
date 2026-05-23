@@ -13,6 +13,8 @@
   --radius: 18px;
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Avenir Next",
     "Trebuchet MS", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 
 * { box-sizing: border-box; }
@@ -272,9 +274,10 @@ button.danger:hover { background: rgba(240, 138, 138, 0.12); }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  font-family: var(--font-mono);
+  font-size: 2.6rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   color: var(--text);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
@@ -369,6 +372,7 @@ button.danger:hover { background: rgba(240, 138, 138, 0.12); }
 }
 
 .big-char {
+  font-family: var(--font-mono);
   font-size: 3.5rem;
   font-weight: 700;
   color: var(--primary-dark);
@@ -420,7 +424,8 @@ button.danger:hover { background: rgba(240, 138, 138, 0.12); }
   height: var(--kb-unit);
   background: white;
   color: #555;
-  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
