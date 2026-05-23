@@ -63,6 +63,8 @@ export function renderTest(root, { profileId }, navigate) {
     ])
   );
 
+  const TRIAL_TIMEOUT_MS = 2000;
+
   const state = {
     lo: 0,
     hi: CHAR_ORDER.length - 1,
@@ -77,7 +79,15 @@ export function renderTest(root, { profileId }, navigate) {
     probesDone: 0,
     currentWrong: false,
     finished: false,
+    timeoutId: null,
   };
+
+  function clearTrialTimeout() {
+    if (state.timeoutId != null) {
+      clearTimeout(state.timeoutId);
+      state.timeoutId = null;
+    }
+  }
 
   function startProbe() {
     state.probe = Math.floor((state.lo + state.hi) / 2);
@@ -109,6 +119,15 @@ export function renderTest(root, { profileId }, navigate) {
     state.targetStartMs = performance.now();
     state.currentWrong = false;
     state.locked = false;
+    clearTrialTimeout();
+    state.timeoutId = setTimeout(onTrialTimeout, TRIAL_TIMEOUT_MS);
+  }
+
+  function onTrialTimeout() {
+    state.timeoutId = null;
+    if (state.locked || state.finished) return;
+    state.currentWrong = true;
+    recordTrialAndNext(TRIAL_TIMEOUT_MS);
   }
 
   function shakeCurrent() {
@@ -121,6 +140,7 @@ export function renderTest(root, { profileId }, navigate) {
   }
 
   function recordTrialAndNext(dtMs) {
+    clearTrialTimeout();
     const ch = state.samples[state.sampleIndex];
     state.trialResults.push({
       wpm: wpmFromMs(dtMs),
@@ -214,5 +234,8 @@ export function renderTest(root, { profileId }, navigate) {
   window.addEventListener('keydown', handleKey);
   startProbe();
 
-  return () => window.removeEventListener('keydown', handleKey);
+  return () => {
+    clearTrialTimeout();
+    window.removeEventListener('keydown', handleKey);
+  };
 }
