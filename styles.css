@@ -295,7 +295,6 @@ button.danger:hover { background: rgba(240, 138, 138, 0.12); }
 
 .ch.shake {
   animation: shake 0.4s ease-in-out;
-  color: #c63939;
 }
 
 @keyframes shake {
