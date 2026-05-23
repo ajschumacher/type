@@ -7,6 +7,7 @@ import {
   importProfile,
   touchLastPlayed,
 } from './storage.js';
+import { awphm } from './stats.js';
 
 export function renderHome(root, _params, navigate) {
   const message = el('p', { class: 'message' });
@@ -112,7 +113,7 @@ export function renderHome(root, _params, navigate) {
 function renderRow(profile, { play, navigate, showError }) {
   const meta =
     profile.level > 0
-      ? `Level ${profile.level}`
+      ? `Level ${profile.level} · AWPHM ${awphm(profile)}`
       : 'New player — needs a quick placement first';
 
   const playBtn = el('button', {
