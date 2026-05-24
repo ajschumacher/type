@@ -108,7 +108,7 @@ The level numbering of milestones (used by the WPM ramp below): end of lowercase
 
 ## Test mode (placement)
 
-Goal: estimate the highest character index the player can already type at the **mastery threshold** (proposed 40 WPM, see below) and set `level` accordingly.
+Goal: estimate the highest character index the player can already type at the **mastery threshold** (see ramp below) and set `level` accordingly.
 
 Algorithm — bracketed binary search over `CHAR_ORDER`, sampling distinct characters near each probe so the player never sees the same character twice in a row (which would let them "find then re-hit" artificially fast).
 
@@ -167,10 +167,10 @@ Counting the first character means "thinking time" between flowers is part of th
 Both the advancement and review thresholds depend on the player's current level, ramping up so beginners aren't asked for unrealistic speed.
 
 **Advance threshold** `T_advance(level)` — piecewise linear:
-- Level 1 → **10 WPM**
-- Level 32 (end of lowercase block, including space + enter) → **20 WPM**
-- Level 58 (end of capital letters) → **40 WPM**
-- Level > 58 → constant **40 WPM**
+- Level 1 → **4 WPM**
+- Level 32 (end of lowercase block, including space + enter) → **8 WPM**
+- Level 58 (end of capital letters) → **12 WPM**
+- Level > 58 → constant **12 WPM**
 
 Linear interpolation between breakpoints. Rounded to one decimal for display.
 
