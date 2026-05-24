@@ -1,6 +1,7 @@
 import { el } from './dom.js';
 import { loadProfile, saveProfile } from './storage.js';
 import { CHAR_ORDER, charInfo, expectedFromKeyEvent } from './chars.js';
+import { advanceThreshold } from './stats.js';
 import { renderFlower } from './flower.js';
 import { MIN_SAMPLES_FOR_ADVANCE } from './leveling.js';
 import { showModal } from './modal.js';
@@ -26,7 +27,6 @@ function seedPriorChars(profile, level) {
 // since their display glyphs (␣ ↵) confuse new users.
 const TESTABLE = CHAR_ORDER.filter(c => c !== ' ' && c !== '\n');
 
-const TRIAL_TIMEOUT_MS = 2000;
 const MAX_TRIALS = 15;
 
 export function renderTest(root, { profileId }, navigate) {
@@ -97,9 +97,16 @@ export function renderTest(root, { profileId }, navigate) {
     state.flowerEl.querySelectorAll('.ch').forEach((node, i) => {
       node.classList.toggle('current', i === 0);
     });
+    // Timeout is derived from the advance threshold for this character's level,
+    // using the same WPM formula as practice mode: maxMs = 60000 / (wpm * 5).
+    // This means easy early chars (f, j) allow ~3 s; hard late chars (?, ") allow ~1 s.
+    const charOrderIndex = CHAR_ORDER.indexOf(ch);
+    const level = charOrderIndex + 1;
+    const timeoutMs = Math.round(60000 / (advanceThreshold(level) * 5));
+
     state.locked = false;
     clearTrialTimeout();
-    state.timeoutId = setTimeout(() => onResult(false), TRIAL_TIMEOUT_MS);
+    state.timeoutId = setTimeout(() => onResult(false), timeoutMs);
   }
 
   function shakeCurrent() {
