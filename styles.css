@@ -494,6 +494,32 @@ button.danger:hover { background: rgba(240, 138, 138, 0.12); }
   justify-content: center;
 }
 
+/* ---- Test ready overlay ---- */
+
+.ready-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(234, 244, 255, 0.82);
+  border-radius: var(--radius);
+  z-index: 10;
+}
+
+.ready-message {
+  margin: 0;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 360px;
+}
+
 /* ---- Caps lock hint + sound toggle ---- */
 
 .caps-hint {

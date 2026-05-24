@@ -254,11 +254,31 @@ export function renderTest(root, { profileId }, navigate) {
     onResult(matched != null);
   }
 
-  window.addEventListener('keydown', handleKey);
-  showChar();
+  function startTest() {
+    window.addEventListener('keydown', handleKey);
+    showChar();
+  }
+
+  // Show a ready overlay so the player can read the instructions and get their
+  // hands on the keyboard before the first character appears.
+  const readyOverlay = el('div', { class: 'ready-overlay' }, [
+    el('p', { class: 'ready-message', text: 'Place your fingers on the keyboard, then press any key to begin.' }),
+  ]);
+  stage.append(readyOverlay);
+
+  function handleReadyKey(e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key.length !== 1 && e.key !== 'Enter') return;
+    e.preventDefault();
+    window.removeEventListener('keydown', handleReadyKey);
+    readyOverlay.remove();
+    startTest();
+  }
+  window.addEventListener('keydown', handleReadyKey);
 
   return () => {
     clearTrialTimeout();
+    window.removeEventListener('keydown', handleReadyKey);
     window.removeEventListener('keydown', handleKey);
   };
 }
