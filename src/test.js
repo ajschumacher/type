@@ -3,6 +3,23 @@ import { loadProfile, saveProfile } from './storage.js';
 import { CHAR_ORDER, charInfo, expectedFromKeyEvent } from './chars.js';
 import { advanceThreshold, wpmFromMs } from './stats.js';
 import { renderFlower } from './flower.js';
+import { MIN_SAMPLES_FOR_ADVANCE } from './leveling.js';
+
+const SEED_WPM = 41;
+const SEED_MS = Math.round(60000 / (SEED_WPM * 5));
+
+function seedPriorChars(profile, level) {
+  for (let i = 0; i < level - 1; i++) {
+    const c = CHAR_ORDER[i];
+    const existing = profile.charStats[c];
+    if (existing && existing.samples && existing.samples.length >= MIN_SAMPLES_FOR_ADVANCE) continue;
+    profile.charStats[c] = {
+      samples: Array(MIN_SAMPLES_FOR_ADVANCE).fill(SEED_MS),
+      attempts: MIN_SAMPLES_FOR_ADVANCE,
+      errors: 0,
+    };
+  }
+}
 
 function shuffleInPlace(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -185,8 +202,10 @@ export function renderTest(root, { profileId }, navigate) {
   function finishTest() {
     state.finished = true;
     state.locked = true;
+    clearTrialTimeout();
     const level = Math.max(1, state.lo);
     profile.level = level;
+    seedPriorChars(profile, level);
     profile.lastPlayed = new Date().toISOString();
     saveProfile(profile);
     banner.querySelector('.placement-title').textContent =
