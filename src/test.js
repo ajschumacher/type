@@ -222,8 +222,8 @@ export function renderTest(root, { profileId }, navigate) {
       : startChar === '\n' ? 'New: Enter!'
       : startChar >= '0' && startChar <= '9' ? `Starting number: ${info.display}`
       : startChar >= 'A' && startChar <= 'Z' ? `Starting capital: ${info.display}`
-      : info.shifted ? `Starting symbol: ${info.display}`
-      : `Starting letter: ${info.display}`;
+      : startChar >= 'a' && startChar <= 'z' ? `Starting letter: ${info.display}`
+      : `Starting symbol: ${info.display}`;
     const bigChar = el('div', { class: 'big-char', text: info.display });
     const instruction = el('p', { class: 'instruction', text: info.instruction });
     const kb = renderKeyboard({ highlight: info.baseKey, shiftHand: info.shiftHand });

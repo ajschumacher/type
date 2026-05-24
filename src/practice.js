@@ -152,8 +152,8 @@ export function renderPractice(root, { profileId }, navigate) {
       : char === '\n' ? 'New: Enter!'
       : char >= '0' && char <= '9' ? `New number: ${info.display}`
       : char >= 'A' && char <= 'Z' ? `New capital: ${info.display}`
-      : info.shifted ? `New symbol: ${info.display}`
-      : `New letter: ${info.display}`;
+      : char >= 'a' && char <= 'z' ? `New letter: ${info.display}`
+      : `New symbol: ${info.display}`;
     const bigChar = el('div', { class: 'big-char', text: info.display });
     const instruction = el('p', { class: 'instruction', text: info.instruction });
     const kb = renderKeyboard({ highlight: info.baseKey, shiftHand: info.shiftHand });
