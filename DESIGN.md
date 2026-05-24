@@ -28,13 +28,13 @@ Rationale: the game is small, the dependencies would outweigh the code, and a 7-
 
 ### Running locally
 
-ES modules don't load from `file://` in browsers, so serve the directory with any static HTTP server. From the project root:
+ES modules don't load from `file://` in browsers, so serve the directory with the included dev server. From the project root:
 
 ```
-python3 -m http.server 8765
+python3 serve.py
 ```
 
-then visit `http://localhost:8765`. (The `.claude/launch.json` configures the Claude Code preview to do the same.)
+then visit `http://localhost:8765`. The server sets `Cache-Control: no-store` on every response so edited JS modules are always re-fetched — no hard-reloads needed. (The `.claude/launch.json` configures the Claude Code preview to use the same script.)
 
 ## Screens & navigation
 

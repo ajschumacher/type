@@ -33,18 +33,13 @@ function renderHud(profile, navigate) {
     text: 'Home',
     onclick: () => navigate('home'),
   });
-  const retestBtn = el('button', {
-    class: 'secondary',
-    text: 'Re-test',
-    onclick: () => navigate('test', { profileId: profile.id }),
-  });
   const hud = el('div', { class: 'hud' }, [
     el('div', { class: 'hud-info' }, [
       el('span', { class: 'hud-name', text: profile.name }),
       levelEl,
       awphmEl,
     ]),
-    el('div', { class: 'hud-actions' }, [soundBtn, retestBtn, homeBtn]),
+    el('div', { class: 'hud-actions' }, [soundBtn, homeBtn]),
   ]);
   hud._refresh = () => {
     levelEl.textContent = isMaxLevel(profile) ? 'Expert' : `Level ${profile.level}`;
