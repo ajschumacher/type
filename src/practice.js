@@ -14,6 +14,7 @@ import {
   playTick,
   playFanfare,
 } from './audio.js';
+import { launchConfetti } from './confetti.js';
 
 function renderHud(profile, navigate) {
   const levelEl = el('span', { class: 'hud-level', text: isMaxLevel(profile) ? 'Expert' : `Level ${profile.level}` });
@@ -127,6 +128,7 @@ export function renderPractice(root, { profileId }, navigate) {
     if (canAdvance(profile)) {
       const nextChar = nextCharToUnlock(profile);
       playFanfare();
+      launchConfetti();
       showLevelUpModal(nextChar, () => {
         advance(profile);
         saveProfile(profile);
@@ -138,6 +140,7 @@ export function renderPractice(root, { profileId }, navigate) {
       profile.masteryAchieved = true;
       saveProfile(profile);
       playFanfare();
+      launchConfetti();
       showCongratsModal(() => {
         state.locked = false;
         loadNext();
