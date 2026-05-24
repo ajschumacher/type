@@ -4,7 +4,7 @@ import { expectedFromKeyEvent, charInfo } from './chars.js';
 import { addSample, addError, awphm } from './stats.js';
 import { renderFlower } from './flower.js';
 import { nextPrompt } from './prompts.js';
-import { canAdvance, advance, nextCharToUnlock } from './leveling.js';
+import { canAdvance, advance, nextCharToUnlock, hasMasteredEverything, isMaxLevel } from './leveling.js';
 import { renderKeyboard } from './keyboard.js';
 import { showModal } from './modal.js';
 import {
@@ -16,7 +16,7 @@ import {
 } from './audio.js';
 
 function renderHud(profile, navigate) {
-  const levelEl = el('span', { class: 'hud-level', text: `Level ${profile.level}` });
+  const levelEl = el('span', { class: 'hud-level', text: isMaxLevel(profile) ? 'Expert' : `Level ${profile.level}` });
   const awphmEl = el('span', { class: 'hud-awphm', text: `AWPHM: ${awphm(profile)}` });
   const soundBtn = el('button', {
     class: 'secondary sound-toggle',
@@ -47,7 +47,7 @@ function renderHud(profile, navigate) {
     el('div', { class: 'hud-actions' }, [soundBtn, retestBtn, homeBtn]),
   ]);
   hud._refresh = () => {
-    levelEl.textContent = `Level ${profile.level}`;
+    levelEl.textContent = isMaxLevel(profile) ? 'Expert' : `Level ${profile.level}`;
     awphmEl.textContent = `AWPHM: ${awphm(profile)}`;
   };
   return hud;
@@ -139,10 +139,32 @@ export function renderPractice(root, { profileId }, navigate) {
         state.locked = false;
         loadNext();
       });
+    } else if (hasMasteredEverything(profile) && !profile.masteryAchieved) {
+      profile.masteryAchieved = true;
+      saveProfile(profile);
+      playFanfare();
+      showCongratsModal(() => {
+        state.locked = false;
+        loadNext();
+      });
     } else {
       state.locked = false;
       loadNext();
     }
+  }
+
+  function showCongratsModal(onDismiss) {
+    const bigChar = el('div', { class: 'big-char', text: '★' });
+    const message = el('p', {
+      class: 'instruction',
+      text: 'Amazing! You\'ve mastered all 94 characters. You\'re a true keyboard expert.',
+    });
+    showModal({
+      title: 'You\'re an Expert!',
+      children: [bigChar, message],
+      dismissLabel: 'Keep typing!',
+      onDismiss,
+    });
   }
 
   function showLevelUpModal(char, onDismiss) {

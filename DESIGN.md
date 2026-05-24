@@ -199,6 +199,12 @@ Player advances to `level+1` (unlocking the next character) when **all** of:
 
 On advancement: the queue pauses, a friendly modal appears showing the new character on a keyboard diagram with the correct finger highlighted and a sentence like *"This is `r`. Reach up with your left index finger."* (For capitals, the modal also shows the opposite-hand shift key with its finger highlighted.) Player clicks Continue, then the new character is heavily weighted in the queue.
 
+### Expert mastery (level 94)
+
+Level 94 is the final level — all 94 characters are unlocked. When a player at level 94 meets the advancement criteria across every character (the "would level up to 95" moment), a one-time congratulatory modal appears (fanfare + ★ icon, "You're an Expert!"). The flag `profile.masteryAchieved` is set so the modal only fires once. After dismissal, practice continues normally.
+
+Wherever a level number would be displayed (HUD, home screen profile card), level-94 players see **"Expert"** instead of a number.
+
 ### Reinforcement rule (no demotion)
 
 If any unlocked character's median WPM drops below `T_review(level)`, advancement is blocked until it climbs back above. The character is weighted heavily in the queue so the player naturally drills it back up. The level number itself never decreases through normal play (only re-test can lower it).
