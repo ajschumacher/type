@@ -4,6 +4,8 @@ import { CHAR_ORDER, charInfo, expectedFromKeyEvent } from './chars.js';
 import { advanceThreshold, wpmFromMs } from './stats.js';
 import { renderFlower } from './flower.js';
 import { MIN_SAMPLES_FOR_ADVANCE } from './leveling.js';
+import { showModal } from './modal.js';
+import { renderKeyboard } from './keyboard.js';
 
 const SEED_WPM = 41;
 const SEED_MS = Math.round(60000 / (SEED_WPM * 5));
@@ -208,15 +210,29 @@ export function renderTest(root, { profileId }, navigate) {
     seedPriorChars(profile, level);
     profile.lastPlayed = new Date().toISOString();
     saveProfile(profile);
-    banner.querySelector('.placement-title').textContent =
-      `All set! You're at Level ${level}.`;
-    const nextChar = CHAR_ORDER[level - 1];
-    const info = charInfo(nextChar);
-    banner.querySelector('.placement-hint').textContent =
-      info ? `We'll start with ${info.name}.` : '';
+    banner.querySelector('.placement-title').textContent = `All set! You're at Level ${level}.`;
+    banner.querySelector('.placement-hint').textContent = '';
     progress.textContent = '';
     if (state.flowerEl) state.flowerEl.classList.add('done');
-    setTimeout(() => navigate('practice', { profileId }), 1600);
+
+    const startChar = CHAR_ORDER[level - 1];
+    const info = charInfo(startChar);
+    const titleLabel =
+      startChar === ' ' ? 'New: Space!'
+      : startChar === '\n' ? 'New: Enter!'
+      : startChar >= '0' && startChar <= '9' ? `Starting number: ${info.display}`
+      : startChar >= 'A' && startChar <= 'Z' ? `Starting capital: ${info.display}`
+      : info.shifted ? `Starting symbol: ${info.display}`
+      : `Starting letter: ${info.display}`;
+    const bigChar = el('div', { class: 'big-char', text: info.display });
+    const instruction = el('p', { class: 'instruction', text: info.instruction });
+    const kb = renderKeyboard({ highlight: info.baseKey, shiftHand: info.shiftHand });
+    showModal({
+      title: titleLabel,
+      children: [bigChar, instruction, kb],
+      dismissLabel: "Let's go!",
+      onDismiss: () => navigate('practice', { profileId }),
+    });
   }
 
   function handleKey(e) {
