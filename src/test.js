@@ -100,8 +100,6 @@ export function renderTest(root, { profileId }, navigate) {
     state.locked = false;
     clearTrialTimeout();
     state.timeoutId = setTimeout(() => onResult(false), TRIAL_TIMEOUT_MS);
-    const trial = MAX_TRIALS - state.trialsLeft + 1;
-    progress.textContent = `${trial} / ${MAX_TRIALS}`;
   }
 
   function shakeCurrent() {
